@@ -1,9 +1,8 @@
 #....
-Author : Sahithi kodali
+Author : Sahithi Kodali
 ....#
 
 #Import required libraries and packages into the coding environment
-
 import cv2
 import os
 from glob import glob 
@@ -14,8 +13,8 @@ from tensorflow.keras.layers import Conv2D,Dense,MaxPooling2D,Flatten,Dropout
 import sklearn 
 from sklearn.model_selection import train_test_split
  
+ 
 #Code to extract frames from each video
-
 folder_names = os.listdir('/content/drive/DDD Project/DDD')
 path = '/content/drive/DDD Project/frames_data'
 for i in [0,5,10]:
@@ -34,8 +33,8 @@ for i in [0,5,10]:
             #print('Read a new frame: ', success)
             count += 1
 
+            
 #Code for finding the shape of the images
- 
 import cv2
 import os
 path = '/content/drive/DDD Project/frames_data/'
@@ -56,8 +55,8 @@ image_shapes = [(480, 720, 3), (720, 1280, 3), (2560, 1440, 3), (1080, 1920, 3),
 img = cv2.imread('/content/drive/DDD Project/frames_data/5/frame5_30_1000.jpg')
 sorted(glob('/content/drive/DDD Project/frames_data/'+str(0)+'/frame'+str(0)+'_'+'04'+'_*.jpg'))
 
-#Code for rotating and removing non-essential frames in the images
- 
+
+#Code for rotating and removing non-essential frames in the images 
 path = '/content/drive/DDD Project/frames_data/'
 for i in [0]:
     folders = ['01']
@@ -67,6 +66,7 @@ for i in [0]:
             img_rotated = cv2.rotate(img,cv2.ROTATE_90_COUNTERCLOCKWISE)
             cv2.imwrite(im,img_rotated)
 
+         
 #resizing the image
 folder_names = ['01','02','04','06','07','08','09','10','14','16','17','18','19','21','22','25','27','28','30']
 path = '/content/drive/DDD Project/frames_data/'
@@ -90,8 +90,8 @@ for i in total_folders:
                 for p in rem_imgs:
                     os.remove(p)          
 
+           
 #Code for building the model of CNN architecture
-
 model = tf.keras.Sequential()
 model.add(Conv2D(64,(3,3),activation = 'relu',kernel_initializer = 'he_uniform',padding='same',input_shape = (240,135,3)))
 model.add(Conv2D(64,(3,3),activation = 'relu',kernel_initializer = 'he_uniform',padding='same'))
@@ -109,7 +109,6 @@ model.add(Dense(3,activation = 'softmax'))
 
 
 #Provide the ground truth for the model and save the image numpy arrays of the images
-
 zero = sorted(glob('/content/drive/DDD Project/frames_data/0/*.jpg'))
 five = sorted(glob('/content/drive/DDD Project/frames_data/5/*.jpg'))
 ten = sorted(glob('/content/drive/DDD Project/frames_data/10/*.jpg'))
@@ -132,8 +131,8 @@ np.save('/content/drive/DDD Project/frames_data/x_test.npy',x_test)
 np.save('/content/drive/DDD Project/frames_data/y_test.npy',y_test)
 np.save('/content/drive/DDD Project/frames_data/y_train.npy',y_train)
 
-#Loading data from the numpy arrays and training the model
- 
+
+#Loading data from the numpy arrays and training the model 
 x_train = np.load('/content/drive/DDD Project/frames_data/x_train.npy')
 x_test = np.load('/content/drive/DDD Project/frames_data/x_test.npy')
 y_train = np.load('/content/drive/DDD Project/frames_data/y_train.npy')
@@ -144,8 +143,8 @@ y_train = np_utils.to_categorical(y_train)
 y_test = np_utils.to_categorical(y_test)
 model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
 
-#Test the model and evaluate the Accuracy
 
+#Test the model and evaluate the Accuracy
 model.fit(x_train,y_train,batch_size=50,epochs=5,verbose=1)
 test_loss, test_acc = model.evaluate(x_test, y_test)
 print('Test accuracy:', test_acc)
